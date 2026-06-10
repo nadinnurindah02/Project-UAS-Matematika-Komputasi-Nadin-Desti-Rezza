@@ -10,11 +10,14 @@ import sympy as sp
 st.title("Project UAS Matematika Komputasi")
 
 st.write("""
-Aplikasi ini digunakan untuk mencari akar persamaan nonlinier menggunakan:
+### Aplikasi Metode Numerik Interaktif Berbasis Web untuk Menentukan Akar Persamaan Nonlinier
 
-1. Metode Bisection
-2. Metode Newton-Raphson
-3. Metode Secant
+*Nama Kelompok:*
+- Nadin Nur Indah
+- Destiana Lingga Sari
+- Rezza Ramadani
+
+Aplikasi ini digunakan untuk mencari akar persamaan nonlinier menggunakan Metode Bisection, Newton-Raphson, dan Secant. Pengguna dapat memilih metode yang diinginkan, memasukkan fungsi yang akan dicari akarnya, kemudian program akan menampilkan hasil perhitungan, tabel iterasi, grafik fungsi, serta perbandingan ketiga metode.
 """)
 
 # Memilih Metode
