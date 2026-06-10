@@ -21,7 +21,12 @@ Aplikasi ini digunakan untuk mencari akar persamaan nonlinier menggunakan:
 
 metode = st.selectbox(
     "Pilih metode yang akan digunakan:",
-    ["Bisection", "Newton-Raphson", "Secant"]
+    [
+        "Bisection",
+        "Newton-Raphson",
+        "Secant",
+        "Perbandingan Metode"
+    ]
 )
 
 # Metode Bisection
@@ -409,3 +414,207 @@ if metode == "Secant":
         plt.grid()
 
         st.pyplot(plt)
+
+# Perbandingan Metode
+
+if metode == "Perbandingan Metode":
+
+    st.header("Perbandingan Ketiga Metode")
+
+    # Input Data dari Pengguna
+
+    fungsi = st.text_input(
+        "Masukkan fungsi",
+        value="x**3 - 4*x - 9",
+        key="banding_fungsi"
+    )
+
+    batas_bawah = st.number_input(
+        "Batas bawah (Bisection)",
+        value=2.0,
+        key="banding_bawah"
+    )
+
+    batas_atas = st.number_input(
+        "Batas atas (Bisection)",
+        value=3.0,
+        key="banding_atas"
+    )
+
+    tebakan_awal = st.number_input(
+        "Tebakan awal (Newton-Raphson)",
+        value=3.0,
+        key="banding_newton"
+    )
+
+    toleransi = st.number_input(
+        "Toleransi",
+        value=0.001,
+        format="%.6f",
+        key="banding_tol"
+    )
+
+    if st.button("Bandingkan Metode"):
+
+        def f(x):
+            return eval(fungsi)
+
+        # Bisection
+
+        bawah = batas_bawah
+        atas = batas_atas
+
+        iterasi_bisection = 0
+
+        while abs(atas - bawah) > toleransi:
+
+            tengah = (bawah + atas) / 2
+
+            if f(bawah) * f(tengah) < 0:
+                atas = tengah
+            else:
+                bawah = tengah
+
+            iterasi_bisection += 1
+
+        akar_bisection = (bawah + atas) / 2
+
+        # Newton-Raphson
+
+        x = sp.symbols("x")
+
+        fungsi_sympy = sp.sympify(fungsi)
+
+        turunan = sp.diff(
+            fungsi_sympy,
+            x
+        )
+
+        fungsi_num = sp.lambdify(
+            x,
+            fungsi_sympy,
+            "numpy"
+        )
+
+        turunan_num = sp.lambdify(
+            x,
+            turunan,
+            "numpy"
+        )
+
+        x0 = tebakan_awal
+
+        iterasi_newton = 0
+
+        while True:
+
+            x1 = x0 - (
+                fungsi_num(x0)
+                / turunan_num(x0)
+            )
+
+            if abs(x1 - x0) < toleransi:
+                break
+
+            x0 = x1
+
+            iterasi_newton += 1
+
+        akar_newton = x1
+
+        # Secant
+
+        x0 = batas_bawah
+        x1 = batas_atas
+
+        iterasi_secant = 0
+
+        while True:
+
+            x2 = x1 - (
+                f(x1)
+                * (x1 - x0)
+                / (f(x1) - f(x0))
+            )
+
+            if abs(x2 - x1) < toleransi:
+                break
+
+            x0 = x1
+            x1 = x2
+
+            iterasi_secant += 1
+
+        akar_secant = x2
+
+        # Menampilkan Tabel Perbandingan
+
+        tabel_perbandingan = pd.DataFrame(
+            {
+                "Metode": [
+                    "Bisection",
+                    "Newton-Raphson",
+                    "Secant"
+                ],
+                "Akar Persamaan": [
+                    akar_bisection,
+                    akar_newton,
+                    akar_secant
+                ],
+                "Jumlah Iterasi": [
+                    iterasi_bisection,
+                    iterasi_newton,
+                    iterasi_secant
+                ]
+            }
+        )
+
+        st.subheader("Tabel Perbandingan")
+
+        st.dataframe(
+            tabel_perbandingan
+        )
+
+        # Grafik Perbandingan Jumlah Iterasi
+
+        st.subheader(
+            "Grafik Perbandingan Jumlah Iterasi"
+        )
+
+        plt.figure(figsize=(8,5))
+
+        plt.bar(
+            tabel_perbandingan["Metode"],
+            tabel_perbandingan["Jumlah Iterasi"]
+        )
+
+        plt.ylabel("Jumlah Iterasi")
+
+        plt.title(
+            "Perbandingan Jumlah Iterasi"
+        )
+
+        st.pyplot(plt)
+
+        # Kesimpulan
+
+tercepat = tabel_perbandingan.loc[
+    tabel_perbandingan[
+        "Jumlah Iterasi"
+    ].idxmin(),
+    "Metode"
+]
+
+st.subheader("Kesimpulan")
+
+st.write(
+    f"""
+Berdasarkan hasil perhitungan yang diperoleh, ketiga metode berhasil memberikan pendekatan nilai akar persamaan sesuai dengan data masukan yang diberikan pengguna.
+
+Perbedaan utama terlihat pada jumlah iterasi yang dibutuhkan untuk mencapai tingkat ketelitian yang sama. Pada percobaan ini, metode yang paling cepat adalah {tercepat} karena membutuhkan jumlah iterasi paling sedikit.
+
+Hasil yang diperoleh dapat berbeda untuk setiap fungsi, interval, maupun tebakan awal yang digunakan. Oleh karena itu, efisiensi masing-masing metode juga dapat berubah tergantung pada kasus yang diuji.
+
+Dengan demikian, pengguna dapat memilih metode yang paling sesuai berdasarkan kebutuhan dan karakteristik fungsi yang akan diselesaikan.
+"""
+)
