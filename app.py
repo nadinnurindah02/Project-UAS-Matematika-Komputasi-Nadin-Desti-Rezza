@@ -517,6 +517,7 @@ if metode == "Perbandingan Metode":
 
             if abs(x1 - x0) < toleransi:
                 break
+            iterasi_newton += 1
 
             x0 = x1
 
@@ -541,6 +542,7 @@ if metode == "Perbandingan Metode":
 
             if abs(x2 - x1) < toleransi:
                 break
+            iterasi_secant += 1
 
             x0 = x1
             x1 = x2
