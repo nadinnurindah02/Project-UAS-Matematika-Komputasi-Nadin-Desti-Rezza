@@ -1,9 +1,10 @@
+# Import Library
 import streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sympy as sp
-
+# Judul Aplikasi
 st.title("Project UAS Matematika Komputasi")
 
 st.write("""
@@ -13,14 +14,14 @@ Aplikasi ini digunakan untuk mencari akar persamaan nonlinier menggunakan:
 2. Metode Newton-Raphson
 3. Metode Secant
 """)
-
+# Memilih Metode
 metode = st.selectbox(
     "Pilih metode yang akan digunakan:",
     ["Bisection", "Newton-Raphson", "Secant"]
 )
 
 st.write("Metode yang dipilih:", metode)
-
+# Metode Bisection
 if metode == "Bisection":
 
     st.header("Metode Bisection")
@@ -45,7 +46,7 @@ if metode == "Bisection":
         value=0.001,
         format="%.6f"
     )
-
+# Perhitungan Metode Bisection
     if st.button("Hitung Bisection"):
 
         def hitung_fungsi(x):
@@ -98,7 +99,7 @@ if metode == "Bisection":
             st.write(
                 f"Jumlah iterasi = {jumlah_iterasi}"
             )
-
+# Menampilkan Tabel Iterasi
             tabel_iterasi = pd.DataFrame(
                 data_iterasi,
                 columns=[
@@ -110,3 +111,31 @@ if metode == "Bisection":
             )
 
             st.dataframe(tabel_iterasi)
+# Menampilkan Grafik Fungsi
+
+x = np.linspace(
+    batas_bawah - 2,
+    batas_atas + 2,
+    400
+)
+
+y = [
+    hitung_fungsi(nilai_x)
+    for nilai_x in x
+]
+
+plt.figure(figsize=(8,5))
+
+plt.plot(x, y)
+
+plt.axhline(y=0)
+
+plt.title("Grafik Fungsi")
+
+plt.xlabel("Nilai x")
+
+plt.ylabel("Nilai f(x)")
+
+plt.grid()
+
+st.pyplot(plt)
