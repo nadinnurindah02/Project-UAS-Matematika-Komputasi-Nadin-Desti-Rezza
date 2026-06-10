@@ -281,3 +281,131 @@ if metode == "Newton-Raphson":
         plt.grid()
 
         st.pyplot(plt)
+
+# Metode Secant
+
+if metode == "Secant":
+
+    st.header("Metode Secant")
+
+    # Input Data dari Pengguna
+
+    fungsi = st.text_input(
+        "Masukkan fungsi",
+        value="x**3 - 4*x - 9",
+        key="sec_fungsi"
+    )
+
+    tebakan_pertama = st.number_input(
+        "Masukkan tebakan pertama",
+        value=2.0,
+        key="sec_x0"
+    )
+
+    tebakan_kedua = st.number_input(
+        "Masukkan tebakan kedua",
+        value=3.0,
+        key="sec_x1"
+    )
+
+    toleransi = st.number_input(
+        "Masukkan toleransi",
+        value=0.001,
+        format="%.6f",
+        key="sec_tol"
+    )
+
+    # Membuat Fungsi Matematika
+
+    def hitung_fungsi(x):
+        return eval(fungsi)
+
+    # Perhitungan Metode Secant
+
+    if st.button("Hitung Secant"):
+
+        data_iterasi = []
+
+        x0 = tebakan_pertama
+        x1 = tebakan_kedua
+
+        jumlah_iterasi = 0
+
+        while True:
+
+            x2 = x1 - (
+                hitung_fungsi(x1)
+                * (x1 - x0)
+                / (
+                    hitung_fungsi(x1)
+                    - hitung_fungsi(x0)
+                )
+            )
+
+            data_iterasi.append([
+                jumlah_iterasi + 1,
+                x0,
+                x1,
+                x2
+            ])
+
+            if abs(x2 - x1) < toleransi:
+                break
+
+            x0 = x1
+            x1 = x2
+
+            jumlah_iterasi += 1
+
+        akar = x2
+
+        st.success(
+            f"Akar persamaan = {akar}"
+        )
+
+        st.write(
+            f"Jumlah iterasi = {jumlah_iterasi + 1}"
+        )
+
+        # Menampilkan Tabel Iterasi
+
+        tabel_iterasi = pd.DataFrame(
+            data_iterasi,
+            columns=[
+                "Iterasi",
+                "x0",
+                "x1",
+                "x2"
+            ]
+        )
+
+        st.dataframe(tabel_iterasi)
+
+        # Menampilkan Grafik Fungsi
+
+        x = np.linspace(
+            akar - 3,
+            akar + 3,
+            400
+        )
+
+        y = [
+            hitung_fungsi(nilai_x)
+            for nilai_x in x
+        ]
+
+        plt.figure(figsize=(8,5))
+
+        plt.plot(x, y)
+
+        plt.axhline(y=0)
+
+        plt.title("Grafik Fungsi")
+
+        plt.xlabel("Nilai x")
+
+        plt.ylabel("Nilai f(x)")
+
+        plt.grid()
+
+        st.pyplot(plt)
