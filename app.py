@@ -54,8 +54,8 @@ if metode == "Bisection":
 
     toleransi = st.number_input(
         "Masukkan toleransi",
-        value=0.001,
-        format="%.6f"
+        value=0.0001,
+        format="%.4f"
     )
 
     # Perhitungan Metode Bisection
@@ -109,7 +109,7 @@ if metode == "Bisection":
             ) / 2
 
             st.success(
-                f"Akar persamaan = {akar}"
+                f"Akar persamaan = {akar:.6f}"
             )
 
             st.write(
@@ -181,8 +181,8 @@ if metode == "Newton-Raphson":
 
     toleransi = st.number_input(
         "Masukkan toleransi",
-        value=0.001,
-        format="%.6f",
+        value=0.0001,
+        format="%.4f",
         key="nr_tol"
     )
 
@@ -241,7 +241,7 @@ if metode == "Newton-Raphson":
         akar = x1
 
         st.success(
-            f"Akar persamaan = {akar}"
+            f"Akar persamaan = {akar:.6f}"
         )
 
         st.write(
@@ -315,8 +315,8 @@ if metode == "Secant":
 
     toleransi = st.number_input(
         "Masukkan toleransi",
-        value=0.001,
-        format="%.6f",
+        value=0.0001,
+        format="%.4f",
         key="sec_tol"
     )
 
@@ -365,7 +365,7 @@ if metode == "Secant":
         akar = x2
 
         st.success(
-            f"Akar persamaan = {akar}"
+            f"Akar persamaan = {akar:.6f}"
         )
 
         st.write(
@@ -449,8 +449,8 @@ if metode == "Perbandingan Metode":
 
     toleransi = st.number_input(
         "Toleransi",
-        value=0.001,
-        format="%.6f",
+        value=0.0001,
+        format="%.4f",
         key="banding_tol"
     )
 
