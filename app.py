@@ -459,7 +459,7 @@ if metode == "Perbandingan Metode":
         def f(x):
             return eval(fungsi)
 
-        # Bisection
+        # Perhitungan Metode Bisection
 
         bawah = batas_bawah
         atas = batas_atas
@@ -479,25 +479,25 @@ if metode == "Perbandingan Metode":
 
         akar_bisection = (bawah + atas) / 2
 
-        # Newton-Raphson
+        # Perhitungan Metode Newton-Raphson
 
-        x = sp.symbols("x")
+        x_simbol = sp.symbols("x")
 
         fungsi_sympy = sp.sympify(fungsi)
 
         turunan = sp.diff(
             fungsi_sympy,
-            x
+            x_simbol
         )
 
         fungsi_num = sp.lambdify(
-            x,
+            x_simbol,
             fungsi_sympy,
             "numpy"
         )
 
         turunan_num = sp.lambdify(
-            x,
+            x_simbol,
             turunan,
             "numpy"
         )
@@ -513,16 +513,16 @@ if metode == "Perbandingan Metode":
                 / turunan_num(x0)
             )
 
+            iterasi_newton += 1
+
             if abs(x1 - x0) < toleransi:
                 break
 
             x0 = x1
 
-            iterasi_newton += 1
-
         akar_newton = x1
 
-        # Secant
+        # Perhitungan Metode Secant
 
         x0 = batas_bawah
         x1 = batas_atas
@@ -537,13 +537,13 @@ if metode == "Perbandingan Metode":
                 / (f(x1) - f(x0))
             )
 
+            iterasi_secant += 1
+
             if abs(x2 - x1) < toleransi:
                 break
 
             x0 = x1
             x1 = x2
-
-            iterasi_secant += 1
 
         akar_secant = x2
 
@@ -581,12 +581,14 @@ if metode == "Perbandingan Metode":
             "Grafik Perbandingan Jumlah Iterasi"
         )
 
-        plt.figure(figsize=(8,5))
+        plt.figure(figsize=(8, 5))
 
         plt.bar(
             tabel_perbandingan["Metode"],
             tabel_perbandingan["Jumlah Iterasi"]
         )
+
+        plt.xlabel("Metode")
 
         plt.ylabel("Jumlah Iterasi")
 
@@ -594,27 +596,27 @@ if metode == "Perbandingan Metode":
             "Perbandingan Jumlah Iterasi"
         )
 
+        plt.grid()
+
         st.pyplot(plt)
 
         # Kesimpulan
 
-tercepat = tabel_perbandingan.loc[
-    tabel_perbandingan[
-        "Jumlah Iterasi"
-    ].idxmin(),
-    "Metode"
-]
+        metode_tercepat = tabel_perbandingan.loc[
+            tabel_perbandingan["Jumlah Iterasi"].idxmin(),
+            "Metode"
+        ]
 
-st.subheader("Kesimpulan")
+        st.subheader("Kesimpulan")
 
-st.write(
-    f"""
+        st.write(
+            f"""
 Berdasarkan hasil perhitungan yang diperoleh, ketiga metode berhasil memberikan pendekatan nilai akar persamaan sesuai dengan data masukan yang diberikan pengguna.
 
-Perbedaan utama terlihat pada jumlah iterasi yang dibutuhkan untuk mencapai tingkat ketelitian yang sama. Pada percobaan ini, metode yang paling cepat adalah {tercepat} karena membutuhkan jumlah iterasi paling sedikit.
+Perbedaan utama terlihat pada jumlah iterasi yang dibutuhkan untuk mencapai tingkat ketelitian yang sama. Pada percobaan ini, metode yang paling cepat adalah {metode_tercepat} karena membutuhkan jumlah iterasi paling sedikit.
 
 Hasil yang diperoleh dapat berbeda untuk setiap fungsi, interval, maupun tebakan awal yang digunakan. Oleh karena itu, efisiensi masing-masing metode juga dapat berubah tergantung pada kasus yang diuji.
 
 Dengan demikian, pengguna dapat memilih metode yang paling sesuai berdasarkan kebutuhan dan karakteristik fungsi yang akan diselesaikan.
 """
-)
+        )
